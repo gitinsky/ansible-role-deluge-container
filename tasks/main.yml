@@ -1,0 +1,24 @@
+---
+- name: put container_environment.sh
+  copy: src=container_environment.sh dest={{ ext_deluge_container_env_volume }}/container_environment.sh
+
+- name: put container_environment.json
+  copy: src=container_environment.json dest={{ ext_deluge_container_env_volume }}/container_environment.json
+
+- name: start a deluge container
+  docker:
+    image: gitinsky/deluge:0.2.0
+    state: started
+    read_only: yes
+    hostname: "{{ ansible_hostname }}-deluge"
+    ports:
+      - "{{ deluge_web_port }}:8112"
+    restart_policy: always
+    restart_policy_retry: 10000000
+    volumes:
+      - "{{ ext_deluge_download_volume }}:/var/lib/deluge"
+      - "{{ ext_deluge_container_env_volume }}:/etc/container_environment"
+      - "{{ ext_deluge_container_env_volume }}/container_environment.sh:/etc/container_environment.sh"
+      - "{{ ext_deluge_container_env_volume }}/container_environment.json:/etc/container_environment.json"
+      - "{{ ext_deluge_var_run_volume }}:/var/run"
+      - "{{ ext_deluge_var_log_eye_volume }}:/var/log/eye"
