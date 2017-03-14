@@ -13,7 +13,7 @@
     name: deluge
     #capabilities:
     #  - SYS_PTRACE
-    image: gitinsky/deluge:0.2.1
+    image: gitinsky/deluge:0.2.2
     state: started
     read_only: yes
     hostname: "{{ ansible_hostname }}-deluge"
