@@ -1,19 +1,13 @@
 ---
-- name: put container_environment.sh
-  copy: src=container_environment.sh dest={{ ext_deluge_container_env_volume }}/container_environment.sh
-
-- name: put container_environment.json
-  copy: src=container_environment.json dest={{ ext_deluge_container_env_volume }}/container_environment.json
-
 - name: install docker-py
-  pip: name=docker-py version=1.7.0
+  pip: name=docker-py version=1.10.6
 
 - name: start a deluge container
   docker_container:
     name: deluge
     #capabilities:
     #  - SYS_PTRACE
-    image: gitinsky/deluge:0.2.2
+    image: kurankat/deluge:latest
     state: started
     read_only: yes
     hostname: "{{ ansible_hostname }}-deluge"
@@ -21,11 +15,5 @@
       - "{{ deluge_web_port }}:8112"
     restart_policy: always
     volumes:
-      - "{{ ext_deluge_download_volume }}:/Downloads"
-      - "{{ ext_deluge_config_volume }}:/var/lib/deluge/.config/deluge"
-      - "{{ ext_deluge_tmp_volume }}:/tmp"
-      - "{{ ext_deluge_container_env_volume }}:/etc/container_environment"
-      - "{{ ext_deluge_container_env_volume }}/container_environment.sh:/etc/container_environment.sh"
-      - "{{ ext_deluge_container_env_volume }}/container_environment.json:/etc/container_environment.json"
-      - "{{ ext_deluge_var_run_volume }}:/var/run"
-      - "{{ ext_deluge_var_log_eye_volume }}:/var/log/eye"
+      - "{{ ext_deluge_download_volume }}:/downloads"
+      - "{{ ext_deluge_config_volume }}:/home/user/.config/deluge"
